@@ -26,6 +26,9 @@ apply: always
 4. **Code Reviews & CI/CD**:
    - Every PR targeting `develop` or `main` must receive at least **1 approving review** on GitHub.
    - All automated CI checks (Django Backend Validation, React Frontend Validation, and PR Source Guard) must pass successfully before merging is allowed.
+   - **Local Testing Mandatory**: Before pushing any feature branch, the agent **must** run backend and frontend tests locally to ensure the remote pipeline remains green.
+     - Backend: `python manage.py check` & `python runtests.py`
+     - Frontend: `npm run lint` & `npm test` & `npm run build`
 
 5. **Commit Attribution**:
    - Every commit message must include the Co-Authored-By footer with the agent's name:
