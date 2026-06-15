@@ -1,0 +1,43 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+{% if request.GET.focus == "modules" %}
+<script>
+(function () {
+  function focusModuleInlines() {
+    var selectors = [
+      "#organizationmodule_set-group",
+      ".inline-group[id*='organizationmodule']",
+      "fieldset.module.aligned h2"
+    ];
+    var target = null;
+    for (var i = 0; i < selectors.length; i += 1) {
+      target = document.querySelector(selectors[i]);
+      if (target) {
+        if (target.tagName === "H2") {
+          target = target.closest("fieldset") || target.parentElement;
+        }
+        break;
+      }
+    }
+    if (!target) {
+      var headings = document.querySelectorAll("h2");
+      for (var j = 0; j < headings.length; j += 1) {
+        if (headings[j].textContent.indexOf("Modul-Freigaben") !== -1) {
+          target = headings[j].closest("fieldset") || headings[j].parentElement;
+          break;
+        }
+      }
+    }
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.classList.add("deskhand-admin-focus");
+    }
+  }
+  document.addEventListener("DOMContentLoaded", focusModuleInlines);
+})();
+</script>
+{% endif %}
+{% endblock %}

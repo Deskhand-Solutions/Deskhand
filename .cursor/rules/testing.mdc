@@ -1,0 +1,44 @@
+﻿---
+description: Mandatory testing standards for Deskhand (backend + frontend)
+alwaysApply: true
+---
+
+# Testing (mandatory)
+
+## Policy
+- Every change to **business logic** must include or update tests.
+- Registries, services, selectors, permissions, and API contracts are critical — always covered.
+- Do not merge/refactor critical paths without a failing test first (red-green-refactor).
+
+## Backend (Django)
+- Framework: `django.test.TestCase` / `rest_framework.test.APITestCase`
+- Location: `apps/<app>/tests/` (one file per concern, e.g. `test_services.py`, `test_api.py`)
+- Shared fixtures: `shared/test_utils/factories.py`
+- Run: `cd backend && .\venv\Scripts\python runtests.py`
+
+### Must test when touching
+| Area | Examples |
+|------|----------|
+| Auth | login, refresh, invalid credentials |
+| Multi-tenancy | organization middleware, member access |
+| Module access | `ModuleAccessService`, org module API |
+| Integrations | registry, connection factory, catalog API |
+| New module | services + permissions + API smoke |
+
+## Frontend (Vitest)
+- Framework: Vitest (`*.test.ts` / `*.test.tsx` next to source)
+- Validate Zod schemas, registries, pure utilities without DOM when possible
+- Run: `cd frontend && npm test`
+
+### Must test when touching
+| Area | Examples |
+|------|----------|
+| Registries | `MODULE_REGISTRY`, `INTEGRATION_REGISTRY` |
+| Schemas | Zod parse/reject for API boundaries |
+| Hooks/utils | data transforms, slug resolvers |
+
+## New feature checklist (add to existing module/integration checklists)
+1. Backend service/selector tests for new logic
+2. API test for new/changed endpoint (status + shape)
+3. Frontend schema/registry test if contract changes
+4. Run both test suites before finishing the task

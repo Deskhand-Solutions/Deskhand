@@ -1,0 +1,53 @@
+﻿---
+description: Deskhand SaaS architecture — Clean Architecture, DDD, folder layout
+---
+
+# Deskhand Architecture
+
+## Principles
+- Clean Architecture + pragmatic DDD
+- Maintainability over shortcuts; no monolithic apps
+- Separate domain concerns; no unrelated logic in `shared/`
+- Design for 100+ modules without structural changes
+
+## Backend layout
+```
+backend/
+├── apps/core/          # accounts, organizations, subscriptions, module_registry, administration
+├── apps/ai/ai_core/       # shared AI only (LLM, embeddings, usage tracking)
+├── apps/integrations/   # shared external providers (Google, Shopify, …)
+├── apps/modules/          # one Django app per automation module
+├── shared/             # cross-cutting only (permissions, mixins, exceptions, utils)
+├── shared/test_utils/  # backend test factories
+└── config/
+```
+
+## Frontend layout
+```
+src/app/           # router, providers
+src/layouts/       # shell layout (Sidebar, AppLayout, navigation chrome)
+src/shared/        # api client, primitives, cross-cutting hooks
+src/modules/        # one folder per automation module (mirrors backend/apps/modules/)
+src/integrations/   # shared provider UI (mirrors backend/apps/integrations/)
+src/features/       # platform concerns only (auth, guards) — NOT customer modules
+src/pages/          # platform shell routes (dashboard, settings, module catalog)
+src/widgets/       # reusable composed UI blocks
+```
+Automation module UI lives only in `src/modules/<name>/`. No large global component dumps.
+
+## Module rules
+- Every customer-facing automation = own app in `apps/modules/<name>/`
+- Never multiple automations in one Django app
+- Register in `module_registry`; assign per Organization
+- Module-specific logic never in `ai_core`
+- Third-party API logic never in modules; use `apps.integrations` + `get_client_for_organization()`
+
+## Layering (per module)
+`api/` orchestrates → `services/` business logic → `selectors/` queries → `tasks/` async (Celery when wired)
+
+Async note: Celery is the target for long-running AI jobs. Until the worker is configured, keep inference synchronous in services with strict timeouts — never block HTTP with unbounded work.
+
+## Testing
+- Backend: `apps/<app>/tests/` + `shared/test_utils/factories.py`
+- Frontend: Vitest colocated `*.test.ts`
+- Critical paths (auth, tenancy, modules, integrations) must stay covered — see `testing.md`

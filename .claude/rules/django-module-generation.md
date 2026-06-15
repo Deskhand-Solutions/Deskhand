@@ -1,0 +1,62 @@
+﻿---
+description: Rules for creating new automation modules in apps/modules/
+paths: backend/apps/modules/**
+---
+
+# Module Generation
+
+> **MANDATORY:** Before creating or changing a module, read the full playbook
+> [`backend/apps/modules/AGENTS.md`](../backend/apps/modules/AGENTS.md) (and the
+> frontend one at `frontend/src/modules/AGENTS.md`). It is the authoritative,
+> nothing-forgotten checklist — this rule is the short summary.
+
+When creating `apps/modules/<module_name>/`:
+
+## Required structure
+```
+module_name/
+├── api/
+├── services/
+├── selectors/
+├── tasks/
+├── models/
+├── permissions/
+├── admin/
+├── tests/
+│   ├── test_services.py
+│   └── test_api.py
+└── migrations/
+```
+
+## Steps
+1. Dedicated Django app — never share app with another automation
+2. Define `MODULE_CONFIG` with slug, name, description
+3. Register via `module_registry.registry.register_module()`
+4. Create `Module` DB record + enable via `OrganizationModule`
+5. DRF endpoints with organization-aware permission checks
+6. Use `@module_required("<slug>")` from `shared.permissions`
+7. Reuse `apps.ai.ai_core` — no duplicate AI infrastructure
+8. Frontend UI in `frontend/src/modules/<module_name>/` + `MODULE_REGISTRY` (see `frontend-module-generation.md`)
+9. Tests: service logic + API auth/org scope (use `shared/test_utils/factories.py`)
+
+## Example MODULE_CONFIG
+```python
+MODULE_CONFIG = {
+    "slug": "chatbot",
+    "name": "Chatbot",
+    "description": "Konversations-KI für Kundenanfragen.",
+}
+```
+
+## Service pattern
+```python
+class ChatbotService:
+    def __init__(self, llm_service: BaseLLMService, organization: Organization):
+        self._llm = llm_service
+        self._organization = organization
+
+    def create_session(self, user, title: str) -> ChatSession:
+        ...
+```
+
+Views call services; services call selectors and ai_core.

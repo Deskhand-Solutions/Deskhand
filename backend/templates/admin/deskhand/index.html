@@ -1,0 +1,168 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block bodyclass %}deskhand-admin dashboard{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/deskhand.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="deskhand-admin-dashboard">
+  <header class="dh-hero dh-animate">
+    <div class="dh-hero__content">
+      <p class="dh-hero__label">Deskhand Verwaltung</p>
+      <h1 class="dh-hero__title">Alles an einem Ort</h1>
+      <p class="dh-hero__text">
+        Lege Kunden-Organisationen an, erstelle Nutzer und richte alles Weitere
+        direkt in der jeweiligen Organisation ein — Schritt für Schritt, ohne
+        technisches Vorwissen.
+      </p>
+      <div class="dh-hero__actions">
+        <a href="{% url 'deskhand_admin:organizations_organization_add' %}" class="dh-btn dh-btn--primary dh-btn--lg">
+          Organisation anlegen
+        </a>
+        <a href="{% url 'deskhand_admin:accounts_user_add' %}" class="dh-btn dh-btn--outline-light dh-btn--lg">
+          Nutzer anlegen
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="dh-panel dh-animate dh-animate--delay-1" aria-labelledby="dh-steps-title">
+    <div class="dh-panel__head">
+      <h2 id="dh-steps-title" class="dh-panel__title">So funktioniert’s</h2>
+      <p class="dh-panel__subtitle">Drei Schritte — in dieser Reihenfolge am einfachsten.</p>
+    </div>
+    <ol class="dh-steps">
+      <li class="dh-step">
+        <span class="dh-step__num" aria-hidden="true">1</span>
+        <div class="dh-step__body">
+          <h3 class="dh-step__title">Organisation anlegen</h3>
+          <p class="dh-step__text">
+            Jeder Kunde bekommt eine eigene Organisation (Firmenname) — oben über
+            „Organisation anlegen“.
+          </p>
+        </div>
+      </li>
+      <li class="dh-step">
+        <span class="dh-step__num" aria-hidden="true">2</span>
+        <div class="dh-step__body">
+          <h3 class="dh-step__title">Nutzer anlegen &amp; zuweisen</h3>
+          <p class="dh-step__text">
+            Konto über „Nutzer anlegen“ erstellen und der Organisation zuordnen.
+          </p>
+          <a href="{% url 'deskhand_admin:organizations_organizationmember_add' %}" class="dh-link">Mitgliedschaft zuweisen</a>
+        </div>
+      </li>
+      <li class="dh-step">
+        <span class="dh-step__num" aria-hidden="true">3</span>
+        <div class="dh-step__body">
+          <h3 class="dh-step__title">Organisation einrichten</h3>
+          <p class="dh-step__text">
+            Unten eine Organisation anklicken — dort stellst du Module, Mitglieder,
+            Integrationen und KI-API-Keys an einem Ort ein.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="dh-panel dh-animate dh-animate--delay-2" aria-labelledby="dh-orgs-title">
+    <div class="dh-panel__head">
+      <h2 id="dh-orgs-title" class="dh-panel__title">Organisationen</h2>
+      <p class="dh-panel__subtitle">
+        Klicke eine Organisation an, um alles zu verwalten: Module, Mitglieder,
+        Integrationen und KI-API-Keys.
+      </p>
+    </div>
+
+    {% if organizations %}
+      <div class="dh-table-wrap">
+        <table class="dh-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Kurzname</th>
+              <th scope="col">Freigegebene Module</th>
+              <th scope="col"><span class="dh-sr-only">Aktion</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for organization in organizations %}
+              <tr>
+                <td class="dh-table__name">{{ organization.name }}</td>
+                <td><span class="dh-badge">{{ organization.slug }}</span></td>
+                <td>
+                  <span class="dh-stat">
+                    {{ organization.enabled_modules_count }}
+                    {% if organization.enabled_modules_count == 1 %}Modul{% else %}Module{% endif %}
+                  </span>
+                </td>
+                <td class="dh-table__action">
+                  <a
+                    href="{% url 'deskhand_admin:organizations_organization_change' organization.pk %}"
+                    class="dh-btn dh-btn--primary dh-btn--sm"
+                  >
+                    Verwalten
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="dh-empty">
+        <p class="dh-empty__title">Noch keine Organisationen</p>
+        <p class="dh-empty__text">Lege die erste Kunden-Organisation an, um loszulegen.</p>
+        <a href="{% url 'deskhand_admin:organizations_organization_add' %}" class="dh-btn dh-btn--primary">
+          Erste Organisation anlegen
+        </a>
+      </div>
+    {% endif %}
+  </section>
+
+  <div class="dh-grid dh-animate dh-animate--delay-3">
+    <section class="dh-panel" aria-labelledby="dh-modules-title">
+      <div class="dh-panel__head">
+        <h2 id="dh-modules-title" class="dh-panel__title">Verfügbare Module</h2>
+        <p class="dh-panel__subtitle">Diese Funktionen lassen sich pro Organisation freischalten.</p>
+      </div>
+      {% if modules %}
+        <ul class="dh-module-list">
+          {% for module in modules %}
+            <li class="dh-module-list__item">
+              <span class="dh-module-list__name">{{ module.name }}</span>
+              <span class="dh-badge dh-badge--muted">{{ module.slug }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="dh-empty dh-empty--compact">
+          <p class="dh-empty__text">Noch keine Module in der Datenbank.</p>
+          <a href="{{ sync_modules_url }}" class="dh-link">Module synchronisieren</a>
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="dh-panel" aria-labelledby="dh-tools-title">
+      <div class="dh-panel__head">
+        <h2 id="dh-tools-title" class="dh-panel__title">Weitere Werkzeuge</h2>
+        <p class="dh-panel__subtitle">Für seltenere Aufgaben.</p>
+      </div>
+      <div class="dh-quick-links">
+        <a href="{% url 'deskhand_admin:accounts_user_changelist' %}" class="dh-quick-link">
+          <span class="dh-quick-link__title">Alle Nutzer</span>
+          <span class="dh-quick-link__hint">Konten &amp; Profile durchsuchen</span>
+        </a>
+        <a href="{{ sync_modules_url }}" class="dh-quick-link dh-quick-link--muted">
+          <span class="dh-quick-link__title">Module synchronisieren</span>
+          <span class="dh-quick-link__hint">Für Entwickler</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

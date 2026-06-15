@@ -1,0 +1,45 @@
+﻿---
+description: React + TypeScript + Tailwind conventions for Deskhand frontend
+paths: frontend/**/*.{ts,tsx}
+---
+
+# React Frontend
+
+## Structure
+- `src/modules/<module_name>/` — automation module pages, api, schemas (mirrors `backend/apps/modules/`)
+- `src/modules/registry.ts` — register every module page here
+- `src/integrations/<provider>/` — shared provider UI metadata (mirrors `backend/apps/integrations/providers/`)
+- `src/integrations/registry.ts` — register every integration here
+- `src/features/` — platform only (auth, route guards)
+- `src/shared/` — api client, primitives, cross-cutting utilities
+- `src/pages/` — platform shell (dashboard, settings, `ModulesPage` catalog)
+- `src/widgets/` — reusable composed UI blocks
+
+## TypeScript
+- Never use `any`; prefer explicit types
+- Validate API responses with **Zod** at boundaries
+- Server state via **TanStack React Query**
+- Global client state via **Zustand** only when necessary
+
+## Styling
+- Tailwind CSS only; no inline styles
+- Reuse design tokens from `index.css` (`--color-*`, utility classes)
+- Use `shared/components/` primitives: `Button`, `Card`, `PageHeader`, `LoadingState`, `ErrorAlert`, `StatusBadge`
+- Merge classes with `shared/utils/cn.ts` — never hardcode `emerald-*`, `red-*`, etc.
+- Consistent spacing scale; accessible focus states
+
+## Module UI
+- Load only modules assigned to the customer (sidebar from API)
+- Each module: folder `src/modules/<name>/` + entry in `MODULE_REGISTRY`
+- Route `/modules/:slug` resolved by `ModuleRoutePage`
+- Module API wrappers in `modules/<name>/api.ts`; shared client in `shared/api/client.ts`
+- Integration API in `integrations/api.ts`; modules must not embed provider connect UI
+
+## Tests (mandatory)
+- Vitest: colocate `*.test.ts` next to registries, schemas, pure utils
+- Registry/schema changes always get parse + slug coverage tests
+- Run `npm test` before finishing
+
+## Security
+- Frontend permissions are UX only
+- Assume backend enforces all authorization

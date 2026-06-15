@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs wc -l)",
+      "Bash(grep -rn \"class .*\\\\\\(models\\\\.\\\\|BaseModel\\\\|AbstractUser\\\\|TimeStamped\\\\\\)\" ./backend --include='*.py' -not -path '*/venv/*')"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block bodyclass %}{% if deskhand_admin %}deskhand-admin {% endif %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/deskhand.css' %}">
+{% endblock %}
+
+{% block nav-global %}
+<div class="deskhand-admin-nav">
+  {% if deskhand_admin %}
+    <a href="{{ full_admin_index_url }}" class="deskhand-admin-nav__link">
+      Technischer Admin
+    </a>
+  {% elif deskhand_admin_index_url %}
+    <a href="{{ deskhand_admin_index_url }}" class="deskhand-admin-nav__link">
+      Zur Übersicht
+    </a>
+  {% endif %}
+</div>
+{% endblock %}

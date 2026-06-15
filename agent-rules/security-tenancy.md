@@ -1,0 +1,30 @@
+---
+description: Security and multi-tenancy rules for Deskhand
+apply: always
+---
+
+# Security & Multi-Tenancy
+
+## Authorization
+- RBAC via `accounts.Role` + organization membership
+- `IsOrganizationMember` and `module_required` on protected endpoints
+- Admin actions validated server-side in Django admin and APIs
+
+## Data isolation
+- All customer-owned rows reference `Organization`
+- Selectors must accept `organization` and filter by it
+- Never expose sequential DB IDs publicly; use UUIDs for new models
+
+## API security
+- CSRF for session auth; rate-limit sensitive endpoints in production
+- Sanitize all user input; escape outputs (XSS)
+- Secrets only via `.env`; never commit credentials
+
+## AI-specific
+- Track token usage via `ai_core` UsageTrackingService
+- Do not log prompts containing PII in production
+- Long-running inference only via Celery tasks
+
+## Frontend
+- Display features based on assigned modules only
+- Never encode permission decisions only in React

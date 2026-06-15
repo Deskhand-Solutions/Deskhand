@@ -1,0 +1,37 @@
+---
+description: Shared third-party integrations for Deskhand (Google, Microsoft, Shopify, SAP)
+paths: backend/apps/integrations/**/*.py
+apply: scoped
+---
+
+# Django Integrations (Metadata-Driven)
+
+## Purpose
+`apps.integrations` holds reusable external provider clients. Modules consume them, while administrators setup organization-specific connections.
+
+## Layout
+```
+apps/integrations/
+├── registry.py              # IntegrationDefinition (auth_type, credential_fields)
+├── base.py                  # BaseIntegrationClient, IntegrationCredentials
+├── models.py                # IntegrationConnection (per organization)
+├── services/
+│   └── connection_service.py  # get_client_for_organization()
+├── api/                     # /api/v1/integrations/
+└── providers/
+    ├── google/
+    ├── microsoft/
+    ├── shopify/
+    └── sap/
+```
+
+## Adding a provider
+1. Create `providers/<slug>/client.py` subclassing `BaseIntegrationClient`.
+2. Implement `.request(method, path, **kwargs)` with provider authentication wrapper for dynamic query flexibility.
+3. Register in `providers/__init__.py` -> `register_builtin_providers()` specifying `auth_type` ("credentials" or "oauth") and all required `CredentialField` parameters (key, label, secret, help_text).
+4. Do not customize form schemas in `admin.py`. The Django Admin form reads `credential_fields` and dynamically creates input fields.
+
+## Rules
+- One folder per provider under `providers/<slug>/`.
+- Credentials must be encrypted at rest in production.
+- Client clients must implement a generic `.request()` method.
