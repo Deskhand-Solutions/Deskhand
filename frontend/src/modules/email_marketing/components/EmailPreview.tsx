@@ -34,7 +34,7 @@ export const EmailPreview = ({
     if (img.data_url.startsWith('blob:')) {
       const placeholderUrl = `https://placehold.co/600x400?text=${encodeURIComponent(img.alt_text)}`
       // Escape for regex
-      const escapedUrl = placeholderUrl.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+      const escapedUrl = placeholderUrl.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
       displayHtml = displayHtml.replace(new RegExp(escapedUrl, 'g'), img.data_url)
     }
   })
