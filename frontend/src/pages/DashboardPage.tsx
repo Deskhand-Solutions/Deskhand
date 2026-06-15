@@ -12,6 +12,7 @@ import {
   Mail,
   PlusCircle,
   GripVertical,
+  type LucideIcon,
 } from 'lucide-react'
 import {
   Button,
@@ -27,7 +28,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { updateDashboardWidget, addDashboardWidget } from '../shared/api/dashboard'
 import { cn } from '../shared/utils/cn'
 
-const iconMap: Record<string, React.ComponentType<any>> = {
+const iconMap: Record<string, LucideIcon> = {
   Activity,
   Package,
   History,
