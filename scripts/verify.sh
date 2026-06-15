@@ -30,6 +30,9 @@ if [ -d "frontend" ]; then
     npm ci
   fi
 
+  log_info "Verifying frontend lockfile synchronization (npm ci --dry-run)..."
+  npm ci --dry-run
+
   log_info "Running frontend linter..."
   npm run lint
 

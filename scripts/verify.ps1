@@ -30,6 +30,9 @@ if (Test-Path "frontend") {
         npm ci
     }
 
+    Log-Info "Verifying frontend lockfile synchronization (npm ci --dry-run)..."
+    npm ci --dry-run
+
     Log-Info "Running frontend linter..."
     npm run lint
 
