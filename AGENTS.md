@@ -94,6 +94,11 @@ frontend/src/pages/           # platform shell (dashboard, settings, module cata
 8. Route `/modules/<slug>` via `ModuleRoutePage` (no per-module router entries)
 9. AI: call `LLMRouter.generate_for_module(organization=…, module_slug="<slug>", prompt=…)` — provider/key/model resolved per org, usage tracked automatically
 10. Tests: `tests/test_services.py`, `tests/test_api.py` (minimum)
+## Git & Branching Workflow
+- **No Direct Pushes**: Never push directly to `main` or `develop`. All work must occur in `feature/<name>` branches.
+- **Pull Requests (PRs)**: Submit PRs to `develop`. Releasing to `main` is done via PR from `develop`. Direct PRs from `feature/*` to `main` are blocked.
+- **Reviews & CI/CD**: All PRs require at least 1 approving review on GitHub and must pass all CI validation checks before merging.
+- **Workflow Setup**: To apply rulesets and set up branches on GitHub, run `python setup-github-rules.py`.
 
 ## Commit attribution
 AI commits MUST include:

@@ -1,0 +1,34 @@
+---
+description: Branching, pushing, and Pull Request workflow requirements for Deskhand
+apply: always
+---
+
+# Git & Branching Workflow
+
+## Branch Structure
+- **`develop`**: The primary development and integration branch. This is the **default branch** of the repository.
+- **`main`**: The production branch containing release-ready code.
+- **`feature/<name>`**: Feature branches used for all active development.
+
+## Rule Enforcement & Workflow
+1. **No Direct Pushes**:
+   - Never push directly to the `main` or `develop` branch. If you attempt to push directly, GitHub will reject the push.
+   - All commits and changes must be pushed to a `feature/<name>` branch.
+
+2. **Feature Branch Naming**:
+   - Always create and work in branch name pattern `feature/<descriptive-name>`.
+
+3. **Pull Requests (PRs)**:
+   - To merge changes into `develop`, create a Pull Request from `feature/<name>` to `develop`.
+   - To release changes to production, create a Pull Request from `develop` to `main`.
+   - Never create a PR directly from `feature/<name>` to `main`. The CI/CD pipeline will fail this check automatically.
+
+4. **Code Reviews & CI/CD**:
+   - Every PR targeting `develop` or `main` must receive at least **1 approving review** on GitHub.
+   - All automated CI checks (Django Backend Validation, React Frontend Validation, and PR Source Guard) must pass successfully before merging is allowed.
+
+5. **Commit Attribution**:
+   - Every commit message must include the Co-Authored-By footer with the agent's name:
+     ```
+     Co-Authored-By: <Agent Name> <noreply@anthropic.com>
+     ```
