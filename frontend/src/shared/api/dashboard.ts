@@ -13,7 +13,7 @@ export const fetchDashboardWidgets = (): Promise<DashboardWidgetsData> =>
 export const addDashboardWidget = (
   widgetType: string,
   position?: number,
-  config?: Record<string, any>
+  config?: Record<string, unknown>
 ): Promise<UserWidget> =>
   apiRequestValidated('/api/v1/dashboard/widgets/', userWidgetSchema, {
     method: 'POST',
@@ -31,7 +31,7 @@ export const removeDashboardWidget = (id: string): Promise<void> =>
 
 export const reorderDashboardWidgets = (
   ids: string[],
-  configs?: Record<string, Record<string, any>>
+  configs?: Record<string, Record<string, unknown>>
 ): Promise<UserWidget[]> =>
   apiRequestValidated('/api/v1/dashboard/widgets/reorder/', z.array(userWidgetSchema), {
     method: 'POST',
@@ -40,7 +40,7 @@ export const reorderDashboardWidgets = (
 
 export const updateDashboardWidget = (
   id: string,
-  data: { widget_type?: string; config?: Record<string, any> }
+  data: { widget_type?: string; config?: Record<string, unknown> }
 ): Promise<UserWidget> =>
   apiRequestValidated(`/api/v1/dashboard/widgets/${id}/`, userWidgetSchema, {
     method: 'PATCH',

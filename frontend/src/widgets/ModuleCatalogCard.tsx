@@ -1,3 +1,4 @@
+import { createElement } from 'react'
 import { ButtonLink, Card } from '../shared/components'
 import { getModuleIcon, type ModuleCatalogView } from '../shared/modules/modulePresentation'
 import { cn } from '../shared/utils/cn'
@@ -12,7 +13,6 @@ type ModuleCatalogCardProps = {
 }
 
 export const ModuleCatalogCard = ({ module }: ModuleCatalogCardProps) => {
-  const Icon = getModuleIcon(module.icon)
   const isActive = module.status === 'active'
 
   return (
@@ -27,7 +27,10 @@ export const ModuleCatalogCard = ({ module }: ModuleCatalogCardProps) => {
           )}
           aria-hidden
         >
-          <Icon className="size-4" strokeWidth={1.75} />
+          {createElement(getModuleIcon(module.icon), {
+            className: 'size-4',
+            strokeWidth: 1.75,
+          })}
         </span>
         <span
           className={cn(

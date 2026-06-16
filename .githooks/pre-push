@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Git pre-push hook for Deskhand
+# Blocks pushing if local validation check fails.
+
+set -euo pipefail
+
+echo "============================================================"
+echo "         Running Pre-Push Verification Check...             "
+echo "============================================================"
+
+# Execute the verification script
+# If any command fails, the hook exits with non-zero and pushes are blocked.
+./scripts/verify.sh
+
+echo "============================================================"
+echo "   [+] Validation Passed! Proceeding with git push.         "
+echo "============================================================"

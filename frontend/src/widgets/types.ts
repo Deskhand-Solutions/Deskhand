@@ -1,7 +1,7 @@
 import React from 'react'
 
 export type WidgetComponentProps = {
-  config?: Record<string, any>
+  config?: Record<string, unknown>
   isEditing?: boolean
 }
 
@@ -19,7 +19,7 @@ export type UserWidget = {
   id: string
   widget_type: string
   position: number
-  config: Record<string, any>
+  config: Record<string, unknown>
 }
 
 export type AvailableWidget = {

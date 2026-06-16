@@ -29,7 +29,7 @@ export const useDashboardWidgets = () => {
     }: {
       widgetType: string
       position?: number
-      config?: Record<string, any>
+      config?: Record<string, unknown>
     }) => addDashboardWidget(widgetType, position, config),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey })
@@ -49,7 +49,7 @@ export const useDashboardWidgets = () => {
       configs,
     }: {
       ids: string[]
-      configs?: Record<string, Record<string, any>>
+      configs?: Record<string, Record<string, unknown>>
     }) => reorderDashboardWidgets(ids, configs),
     onMutate: async ({ ids, configs }) => {
       await queryClient.cancelQueries({ queryKey })
@@ -93,7 +93,7 @@ export const useDashboardWidgets = () => {
       data,
     }: {
       id: string
-      data: { widget_type?: string; config?: Record<string, any> }
+      data: { widget_type?: string; config?: Record<string, unknown> }
     }) => updateDashboardWidget(id, data),
     onMutate: async ({ id, data }) => {
       await queryClient.cancelQueries({ queryKey })
