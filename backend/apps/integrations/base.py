@@ -33,3 +33,27 @@ class BaseIntegrationClient(ABC):
     def health_check(self) -> bool:
         """Lightweight connectivity check; must not mutate remote state."""
         raise NotImplementedError
+
+    def get_tools(self) -> list[dict]:
+        """
+        Returns a list of JSON-schema dictionaries for the tools this client provides.
+        Example output format:
+        [
+            {
+                "name": "shopify_get_products",
+                "description": "Fetch products",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "limit": {"type": "integer"}
+                    }
+                }
+            }
+        ]
+        """
+        return []
+
+    def execute_tool(self, name: str, arguments: dict) -> Any:
+        """Executes the tool with the given name and arguments."""
+        raise NotImplementedError(f"Tool '{name}' is not implemented on client '{self.provider_slug}'.")
+

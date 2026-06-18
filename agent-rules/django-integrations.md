@@ -35,3 +35,5 @@ apps/integrations/
 - One folder per provider under `providers/<slug>/`.
 - Credentials must be encrypted at rest in production.
 - Client clients must implement a generic `.request()` method.
+- Provider clients can optionally expose tool calling to LLMs by implementing `.get_tools() -> list[dict]` (returning JSON schema definitions) and `.execute_tool(name: str, arguments: dict) -> Any`.
+

@@ -63,3 +63,45 @@ class ShopifyIntegrationClient(BaseIntegrationClient):
         if response.status_code == 200:
             return response.json().get("orders", [])
         return []
+
+    def get_tools(self) -> list[dict]:
+        return [
+            {
+                "name": "shopify_get_products",
+                "description": "Retrieve products list from Shopify Admin API.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "limit": {
+                            "type": "integer",
+                            "description": "Maximum number of products to return (default 20).",
+                            "default": 20,
+                        }
+                    },
+                },
+            },
+            {
+                "name": "shopify_get_orders",
+                "description": "Retrieve recent orders from Shopify Admin API.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "limit": {
+                            "type": "integer",
+                            "description": "Maximum number of orders to return (default 10).",
+                            "default": 10,
+                        }
+                    },
+                },
+            },
+        ]
+
+    def execute_tool(self, name: str, arguments: dict) -> list:
+        if name == "shopify_get_products":
+            limit = arguments.get("limit", 20)
+            return self.get_products(limit=limit)
+        elif name == "shopify_get_orders":
+            limit = arguments.get("limit", 10)
+            return self.get_orders(limit=limit)
+        raise NotImplementedError(f"Tool '{name}' is not supported by Shopify integration.")
+

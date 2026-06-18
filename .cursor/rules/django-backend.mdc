@@ -44,5 +44,5 @@ alwaysApply: false
 ## OOP / DRY
 - Prefer composition over inheritance
 - Inject dependencies into services (provider, repository)
-- Reuse `ai_core` services; do not duplicate LLM/embedding logic
+- Reuse `ai_core` services; do not duplicate LLM/embedding logic. For dynamic tool-calling (agent loop), use `LLMRouter.generate_with_tools(organization=..., module_slug=..., prompt=...)` which compiles and runs active integration tools internally.
 - Reuse `integrations` clients via `get_client_for_organization()`; no provider SDKs in modules

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -8,6 +8,7 @@ class LLMResponse:
     model: str
     tokens_input: int = 0
     tokens_output: int = 0
+    tool_calls: list[dict] = field(default_factory=list)
 
 
 class BaseLLMService(ABC):
@@ -33,5 +34,13 @@ class BaseLLMService(ABC):
         return bool(self._api_key)
 
     @abstractmethod
-    def generate(self, prompt: str, *, model: str | None = None) -> LLMResponse:
+    def generate(
+        self,
+        prompt: str | None = None,
+        *,
+        messages: list[dict] | None = None,
+        model: str | None = None,
+        tools: list[dict] | None = None,
+    ) -> LLMResponse:
         raise NotImplementedError
+
